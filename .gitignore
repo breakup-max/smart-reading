@@ -1,0 +1,12 @@
+__pycache__/
+*.pyc
+*.pyo
+.chroma/
+temp_*.pdf
+*.tmp
+.venv/
+venv/
+.env
+.idea/
+.vscode/
+data/images/
