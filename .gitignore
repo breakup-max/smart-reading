@@ -3,6 +3,7 @@ __pycache__/
 *.pyo
 .chroma/
 temp_*.pdf
+*.pdf
 *.tmp
 .venv/
 venv/
