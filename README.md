@@ -99,36 +99,38 @@ export DASHSCOPE_API_KEY="your-api-key-here"
 
 ## 🚀 快速开始
 
-### 方式一：路径参数
+### 方式一：Web 界面（推荐）
+
+```bash
+# Windows
+start.bat
+
+# Linux / macOS
+bash start.sh
+```
+
+浏览器打开 **http://localhost:8000**，上传 PDF 即可对话问答。
+
+### 方式二：命令行
 
 ```bash
 python run.py "D:\我的文档\paper.pdf"
 ```
 
-### 方式二：交互输入 + 文件选择对话框
+支持传入文件路径或文件夹路径（自动扫描目录下 PDF）。
+
+### 方式三：Docker 部署
 
 ```bash
-python run.py
+# 配置 API Key
+cp .env.example .env
+# 编辑 .env，填入你的 DASHSCOPE_API_KEY
+
+# 构建并启动
+docker compose up -d
 ```
 
-运行后：
-1. **直接粘贴 PDF 路径回车** → 开始索引构建
-2. **直接回车** → 进入密码模式，输入密码可弹出文件选择对话框（密码见源码）
-3. 支持传入**文件路径**或**文件夹路径**（自动扫描目录下 PDF）
-
-### 交互问答
-
-索引构建完成后进入问答循环：
-
-```
-✅ 准备就绪，开始问答（输入 quit / exit 退出）
-
-你: 这篇论文的核心贡献是什么？
-AI: 根据文档内容，该论文主要贡献如下...
-
-你: 它和之前的方法有什么区别？       ← 多轮对话，自动结合上下文
-AI: ...
-```
+浏览器打开 **http://localhost:8000**。
 
 ---
 
@@ -136,23 +138,36 @@ AI: ...
 
 ```
 smart-reading/
-├── run.py                          # 入口文件，PDFQA 类 + CLI 交互
+├── run.py                          # CLI 入口，PDFQA 类
+├── start.bat / start.sh            # 一键启动脚本
+├── Dockerfile / docker-compose.yml # Docker 部署
+├── .env.example                    # 环境变量模板
+├── web/                            # Web 前后端
+│   ├── app.py                      # FastAPI 应用入口
+│   ├── schemas.py                  # Pydantic 数据模型
+│   ├── routers/
+│   │   ├── upload.py               # POST /api/upload
+│   │   └── chat.py                 # POST /api/chat
+│   └── static/
+│       ├── index.html              # 前端主页面
+│       ├── css/style.css
+│       └── js/app.js
 ├── config/
-│   └── setting.py                  # QaConfig：所有可调超参数集中管理
-├── indexing/                       # 索引构建层（离线/首次运行）
-│   ├── indexing_pipeline.py        # 总调度：ingest → vectorstore
-│   ├── ingest.py                   # PDF 加载 + 文本切分
-│   ├── vectorstore.py              # Embedding + ChromaDB 存储
-│   └── storage.py                  # 索引命名空间、持久化管理
-├── querying/                       # 查询问答层（在线/每次提问）
-│   ├── rag_pipeline.py             # 总调度：rewrite → retrieve → rerank → answer
-│   ├── rewrite.py                 # 多轮问题改写
-│   ├── vector_retriever.py         # 混合检索 + MMR
-│   ├── rerank.py                  # Cross-Encoder 精排
-│   ├── query_prompt.py             # Prompt 模板
-│   └── answer.py                   # LLM 答案生成
+│   └── setting.py                  # QaConfig：所有可调超参数
+├── indexing/                       # 索引构建层
+│   ├── indexing_pipeline.py
+│   ├── ingest.py
+│   ├── vectorstore.py
+│   └── storage.py
+├── querying/                       # 查询问答层
+│   ├── rag_pipeline.py
+│   ├── rewrite.py
+│   ├── vector_retriever.py
+│   ├── rerank.py
+│   ├── query_prompt.py
+│   └── answer.py
 ├── test/                           # 测试脚本 & 学习实验
-├── data/                           # 示例文档 & 图片资源
+├── data/
 ├── requirements.txt
 └── .gitignore
 ```
@@ -218,6 +233,49 @@ hybrid_top_m=12  # 混合检索融合后的候选数
 - Dense Vector vs BM25 关键词检索的优劣势互补
 - 为什么"GPT-4 参数量"向量检索会排错
 - 混合检索的融合策略
+
+---
+
+## 🚢 部署上线
+
+### 本地部署
+
+```bash
+# 1. 设置环境变量
+set DASHSCOPE_API_KEY=sk-xxx
+
+# 2. 安装依赖
+pip install -r requirements.txt
+
+# 3. 启动
+python -m uvicorn web.app:app --host 0.0.0.0 --port 8000
+# 或双击 start.bat（Windows）/ bash start.sh（Linux）
+```
+
+### Docker 部署
+
+```bash
+cp .env.example .env
+# 编辑 .env → 填入 DASHSCOPE_API_KEY
+docker compose up -d
+```
+
+### API 端点
+
+| 端点 | 方法 | 说明 |
+|------|------|------|
+| `/` | GET | 前端页面 |
+| `/api/health` | GET | 健康检查 |
+| `/api/upload` | POST | 上传 PDF（multipart/form-data，file 字段） |
+| `/api/chat` | POST | 提问（JSON：file_hash + question） |
+
+### 云平台部署
+
+项目可直接部署到任何支持 Python 的云平台（Railway、Render、HuggingFace Spaces 等），只需设置 `DASHSCOPE_API_KEY` 环境变量并将启动命令设为：
+
+```
+python -m uvicorn web.app:app --host 0.0.0.0 --port $PORT
+```
 
 ---
 

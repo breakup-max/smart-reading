@@ -1,0 +1,53 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Smart-Reading &middot; PDF 智能问答</title>
+    <link rel="stylesheet" href="/static/css/style.css">
+    <link rel="icon" href="data:image/svg+xml,<svg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 32 32'><text y='28' font-size='28'>📚</text></svg>">
+</head>
+<body>
+<div id="app">
+    <!-- Sidebar -->
+    <aside class="sidebar">
+        <h2><span class="icon">📚</span> Smart-Reading</h2>
+
+        <div class="upload-zone" id="uploadZone">
+            <div class="upload-icon">📤</div>
+            <p>点击或拖拽上传 PDF</p>
+            <p class="hint">支持 .pdf 格式</p>
+        </div>
+        <input type="file" id="fileInput" accept=".pdf" hidden>
+
+        <div class="file-list">
+            <div class="file-list-label">已上传文件</div>
+            <div id="fileListContainer">
+                <div class="empty-files">暂无文件，请先上传 PDF</div>
+            </div>
+        </div>
+    </aside>
+
+    <!-- Main Chat -->
+    <main class="main">
+        <div class="chat-header">
+            📄 <span class="file-indicator" id="fileIndicator">请选择或上传 PDF 文件</span>
+        </div>
+
+        <div class="chat-messages" id="chatMessages">
+            <div class="welcome">
+                <div class="big-icon">💬</div>
+                <p>上传一份 PDF，然后向我提问</p>
+            </div>
+        </div>
+
+        <div class="chat-input-area">
+            <textarea id="questionInput" rows="1" placeholder="请输入你的问题..." disabled></textarea>
+            <button id="sendBtn" disabled>发送</button>
+        </div>
+    </main>
+</div>
+
+<script src="/static/js/app.js"></script>
+</body>
+</html>

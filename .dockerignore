@@ -1,0 +1,16 @@
+__pycache__/
+*.pyc
+*.pyo
+.chroma/
+temp_*.pdf
+*.pdf
+*.tmp
+.venv/
+venv/
+.env
+.idea/
+.vscode/
+data/images/
+Dockerfile
+.dockerignore
+docker-compose.yml

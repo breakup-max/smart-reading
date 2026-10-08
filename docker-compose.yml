@@ -1,0 +1,12 @@
+services:
+  smart-reading:
+    build: .
+    container_name: smart-reading
+    ports:
+      - "8000:8000"
+    environment:
+      - DASHSCOPE_API_KEY=${DASHSCOPE_API_KEY}
+    volumes:
+      - ./.chroma:/app/.chroma
+      - ./data:/app/data
+    restart: unless-stopped
