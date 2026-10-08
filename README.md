@@ -109,7 +109,7 @@ start.bat
 bash start.sh
 ```
 
-浏览器打开 **http://localhost:8000**，上传 PDF 即可对话问答。
+服务启动后访问 **http://localhost:8000**，通过 Web UI 上传 PDF 并开始多轮问答。
 
 ### 方式二：命令行
 
@@ -130,7 +130,7 @@ cp .env.example .env
 docker compose up -d
 ```
 
-浏览器打开 **http://localhost:8000**。
+构建完成后访问 **http://localhost:8000**。
 
 ---
 
